@@ -1,0 +1,26 @@
+[package]
+name = "unity-web-server"
+authors = ["TheWhiteShadow"]
+version = "0.1.0"
+edition = "2021"
+repository = "https://github.com/TheWhiteShadow4/unity-web-server"
+
+[dependencies]
+tokio = { version = "1.32.0", features = ["full"] }
+warp = "0.3.5"
+clap = { version = "4.4.3", features = ["derive"] }
+tracing = "0.1.37"
+tracing-subscriber = "0.3.17"
+dunce = "1.0.4"
+serde_json = "1.0.107"
+chrono = "0.4.31"
+regex = "1.11.1"
+open = "5.3.2"
+
+[profile.release]
+# Optimierung auf Größe
+opt-level = 'z'     # Maximale Größenoptimierung
+lto = true          # Link-Time Optimization
+codegen-units = 1   # Langsamerer Build, aber bessere Optimierung
+panic = 'abort'     # Kleinerer Binary durch Entfernen von Panic-Unwinding
+strip = true        # Entfernt Debug-Symbole
