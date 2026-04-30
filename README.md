@@ -5,14 +5,7 @@ A lightweight development server for Unity WebGL builds with automatic build det
 ## 🚀 Quick Start (Windows)
 
 1. Download the [latest release](https://github.com/TheWhiteShadow4/unity-web-server/releases)
-2. Place `unity-web-server.exe` next to your Unity WebGL build folder:
-   ```
-   YourGame/
-   ├── Build/           <- Your Unity WebGL build
-   │   ├── index.html
-   │   └── ...
-   └── unity-web-server.exe <- The server executable
-   ```
+2. Place `unity-web-server.exe` next to your Unity WebGL build folder or directly inside:
 3. Start `unity-web-server.exe` - it will:
    - Automatically try to detect your Unity build
    - Open your default browser
@@ -53,16 +46,6 @@ The server will:
 3. Continue up to 10 ports higher than the specified port
 4. Display a clear message if using a different port than requested
 
-### Alternative Placement
-
-You can also place the server inside your build folder:
-```
-Build/
-├── index.html
-├── unity-web-server.exe
-└── ...
-```
-
 ### Build Search Paths
 
 The server looks for Unity builds in:
@@ -71,6 +54,22 @@ The server looks for Unity builds in:
 3. `../build`
 4. `./Build`
 5. `./build`
+
+#### Examples
+```
+YourGame/
+├── Build/           <- Your Unity WebGL build
+│   ├── index.html
+│   └── ...
+└── unity-web-server.exe <- The server executable
+```
+
+```
+Build/
+├── index.html
+├── unity-web-server.exe
+└── ...
+```
 
 ### Technical Features
 
