@@ -1,5 +1,6 @@
 use std::convert::Infallible;
 use warp::Filter;
+use warp::http::response::Builder as ResponseBuilder;
 use clap::Parser;
 use tracing::{info, error};
 use std::net::TcpListener;
@@ -118,7 +119,6 @@ async fn main() {
     info!("Starting Unity WebGL Server...");
     info!("Host: {}", args.host);
     info!("Port: {}", port);
-    info!("Unity Build Path: {}", unity_build_path);
     info!("Mode: {}", if args.headless { "Headless" } else { "Browser" });
     
     // CORS configuration for Unity WebGL
@@ -176,6 +176,14 @@ async fn main() {
     warp::serve(routes)
         .run(addr)
         .await;
+}
+
+/// Browser sollen Build-Artefakte nicht cachen
+fn no_cache_headers(builder: ResponseBuilder) -> ResponseBuilder {
+    builder
+        .header("cache-control", "no-store, no-cache, must-revalidate, max-age=0")
+        .header("pragma", "no-cache")
+        .header("expires", "0")
 }
 
 async fn serve_unity_file(build_path: String, file_path: String) -> Result<impl warp::Reply, warp::Rejection> {
@@ -246,10 +254,9 @@ async fn serve_unity_file(build_path: String, file_path: String) -> Result<impl 
     match tokio::fs::read(&full_path).await {
         Ok(contents) => {
             let content_type = get_content_type(&file_path);
-            let mut builder = Response::builder()
+            let mut builder = no_cache_headers(Response::builder())
                 .status(StatusCode::OK)
-                .header("content-type", content_type)
-                .header("cache-control", "public, max-age=31536000");
+                .header("content-type", content_type);
             
             // Unity WebGL specific headers for compressed files
             if file_path.ends_with(".br") {
@@ -451,7 +458,7 @@ async fn serve_index_html() -> Result<impl warp::Reply, Infallible> {
     </div>
     
     <div class="status">
-        <strong>✅ Server Status:</strong> Running with Unity WebGL support
+        <strong>✅ Server Status:</strong> Running with Unity WebGL and WebGPU support
         <br>
         <small>Detected game size: {}×{}</small>
     </div>
